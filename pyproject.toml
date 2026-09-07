@@ -7,7 +7,11 @@ authors = [
     { name = "Ceven Jupiter Knowles", email = "160178756+CevenJKnowles@users.noreply.github.com" }
 ]
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = [
+    "fastapi>=0.141.1",
+    "python-multipart>=0.0.32",
+    "uvicorn[standard]>=0.52.4",
+]
 
 [project.scripts]
 kitty3000-ml = "kitty3000_ml:main"
