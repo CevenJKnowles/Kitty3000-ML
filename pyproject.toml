@@ -9,7 +9,11 @@ authors = [
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi>=0.141.1",
+    "librosa>=1.0.0",
+    "numpy>=2.5.3",
+    "pydub>=0.25.1",
     "python-multipart>=0.0.32",
+    "soundfile>=0.14.0",
     "uvicorn[standard]>=0.52.4",
 ]
 
