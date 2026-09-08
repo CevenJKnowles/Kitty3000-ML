@@ -8,7 +8,7 @@
 import numpy as np
 import librosa
 
-SR = 16000          # MK: default sample rate for the baseline CNN. PANNs wants 32000, pass it explicitly. tbd
+SR = 22050          # MK: default sample rate for the baseline CNN. PANNs wants 32000, pass it explicitly. tbd
 SECONDS = 2.0       # MK: default window length, tbd. Ceven's 7 s / 22 kHz files from 08.09. are the same thing as
                     # MK: load_clip(path, sr=22050, seconds=7.0) - we run 2 s vs 7 s on val before we fix the default.
 
