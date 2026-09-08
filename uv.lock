@@ -522,6 +522,8 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
+    { name = "librosa" },
+    { name = "matplotlib" },
     { name = "pandas" },
     { name = "panns-inference" },
     { name = "python-multipart" },
@@ -541,6 +543,8 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.141.1" },
+    { name = "librosa", specifier = ">=1.0.0" },
+    { name = "matplotlib", specifier = ">=3.11.1" },
     { name = "pandas", specifier = ">=3.0.5" },
     { name = "panns-inference", specifier = ">=0.1.1" },
     { name = "python-multipart", specifier = ">=0.0.32" },
