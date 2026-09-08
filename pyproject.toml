@@ -23,6 +23,8 @@ dependencies = [
     "soundfile>=0.14.0",
     "uvicorn[standard]>=0.52.4",
     "umap-learn>=0.5.12",
+    "plotly>=7.0.0",
+    "ipywidgets>=8.1.9",
 ]
 
 [project.scripts]
