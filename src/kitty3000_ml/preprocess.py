@@ -1,16 +1,27 @@
 # MK: Shared preprocessing for training AND the API. Whatever the model was trained on, predict.py must do the same thing
 # MK: to an upload later, so this file is the only place where audio is loaded, cut and turned into a spectrogram.
 # MK: Two functions:
-# MK:   load_clip(path, sr, seconds) -> 1D numpy array: mono, resampled to sampling rate sr, fixed window of `seconds` around the loudest point
-# MK:   logmel(y, sr)                -> 2D numpy array: log-mel spectrogram in dB (the "image" data for the CNN)
-# MK: PANNs does NOT need logmel (its mel layer is inside the model), it only needs load_clip with sr=32000.
+# MK:   load_clip(path, sr, seconds) -> 1D numpy array: mono, resampled to sr, fixed window of `seconds` around the loudest point
+# MK:   logmel(y, sr)                -> 2D numpy array: log-mel spectrogram in dB (the "image" for the CNN)
+#
+# MK: How to use this (CNN, PANNs, AST):
+# MK:   manifest = pd.read_csv("data/manifest.csv")
+# MK:   train = manifest[manifest["split"] == "train"]
+# MK:   val = manifest[manifest["split"] == "val"]          # MK: test: touch it ONCE, before demo day
+
+# MK:   for each row in train / val:
+# MK:       path = "data/raw/CatSound_originals/" + row["path"]
+# MK:       CNN:    x_temp = load_clip(path, 32000);  X = logmel(x_temp, 32000)
+# MK:       PANNs:  X = load_clip(path, 32000)
+# MK:       AST:    X = load_clip(path, 16000)
+# MK: Don't build spectrograms anywhere else: the API calls exactly these two functions on an upload.
 
 import numpy as np
 import librosa
 
-SR = 22050          # MK: default sample rate for the baseline CNN. PANNs wants 32000, pass it explicitly. tbd
-SECONDS = 2.0       # MK: default window length, tbd. Ceven's 7 s / 22 kHz files from 08.09. are the same thing as
-                    # MK: load_clip(path, sr=22050, seconds=7.0) - we run 2 s vs 7 s on val before we fix the default.
+SR = 32000          # MK: team decision 09.09.: 32 kHz for everything. PANNs needs it anyway, AST resamples to 16 kHz itself (load_clip with SR=16000)
+SECONDS = 11.0      # MK: team decision 09.09., based on Ceven's duration tests (2/5/7/11 s). Pass a shorter window
+                    # MK: explicitly if a model is slow on it, e.g. load_clip(path, 32000, 7.0) for the CNN.
 
 
 # MK: only used for the baseline CNN (logmel). PANNs computes its own mel inside the model, nothing to match here.
@@ -40,8 +51,7 @@ def load_clip(path, sr=SR, seconds=SECONDS):
         start = 0                           # MK: clip is shorter than the window
     y = y[start:start + window]
 
-    # MK: clips shorter than the window are padded with zeros at the END. This is the one place where silence gets in.
-    # MK: With seconds=2 that hits only the ~110 files under 1 s; with seconds=7 it would hit almost every file.
+    # MK: shorter clips get zero-padded at the end - at 11 s that is almost every file, fine for PANNs, keep an eye on it for the CNN, shorten the window if to time consuming
     if len(y) < window:
         y = np.pad(y, (0, window - len(y)))
 
