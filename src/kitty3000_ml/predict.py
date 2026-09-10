@@ -1,22 +1,45 @@
-from kitty3000_ml.labels import LABELS # MK: labels.py with dummy labels from the original data, tbd if we keep these
-from kitty3000_ml.model import run # MK: model.py comes from the ML-team, which eventually will be replaced with the actual model code and returns the scores for each label
+from kitty3000_ml.labels import LABELS
+from kitty3000_ml.models import dummy, panns, ast, cnn
 
-def predict(wav_bytes):
-    # MK: This is the main function that will be called by the API, it will call the model and return the label with the highest score and the scores for each label
-    scores = run(wav_bytes)
+MODELS = {"dummy": dummy, "panns": panns, "ast": ast, "cnn": cnn}
+CAT_THRESHOLD = 0.2
 
-    probs = {} # MK: dictionary to hold the scores for each label
-    for i in range(len(LABELS)): # MK: iterate over the labels and scores and add them to the dictionary
-        label = LABELS[i]
-        score = scores[i]
-        probs[label] = score
+
+def available_models():
+    names = []
+    for name in MODELS:
+        if MODELS[name].available():
+            names.append(name)
+    return names
+
+
+def default_model():
+    if panns.available():
+        return "panns"
+    return "dummy"
+
+
+def predict(wav_bytes, model_name):
+    model = MODELS[model_name]
+    result = model.run(wav_bytes)
+    scores = result["scores"]
+    cat_score = result["cat_score"]
+
+    probs = {}
+    for i in range(len(scores)):
+        probs[LABELS[i]] = scores[i]
 
     best_label = ""
     best_score = 0
-    for label in probs: # MK: iterate over the dictionary and find the label with the highest score
+    for label in probs:
         if probs[label] > best_score:
             best_score = probs[label]
             best_label = label
 
-    result = {"label": best_label, "probs": probs} # MK: return the label with the highest score and the scores for each label
-    return result
+    is_cat = True
+    if cat_score is not None:
+        is_cat = cat_score >= CAT_THRESHOLD
+    if not is_cat:
+        best_label = "Unknown"
+
+    return {"label": best_label, "probs": probs, "cat_score": cat_score, "is_cat": is_cat, "model": model_name}
