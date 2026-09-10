@@ -61,6 +61,22 @@ def _panel(*children):
     return widgets.VBox(list(children))
 
 
+def close_widget_tree(widget):
+    """Recursively closes a widget and all its descendant widgets' comms, so the
+    frontend actually tears down the old view instead of leaving it displayed
+    alongside a freshly built replacement. Some notebook front ends (VS Code's
+    Jupyter extension included) don't do this on their own just because a cell's
+    output was cleared/replaced - see the audio player rebuild in
+    build_sample_browser_panel below for the same issue in a smaller, local form.
+    Call this on a previous build's root widget (e.g. a GridspecLayout) right
+    before displaying a fresh one on cell re-run. Safe to call with None."""
+    if widget is None:
+        return
+    for child in getattr(widget, "children", None) or []:
+        close_widget_tree(child)
+    widget.close()
+
+
 def build_training_curves_panel(history):
     """history: dict with keys train_loss, val_loss, val_macro_f1 (one list per metric, one value per epoch)."""
     epochs = list(range(1, len(history["train_loss"]) + 1))
@@ -328,16 +344,29 @@ class GradCAM:
         self.model = model
         self.activations = None  # filled in by _save_activation on every forward pass
         self.gradients = None    # filled in by _save_gradient on every backward pass
-        # forward hook: fires every time target_layer produces output during model(x)
-        target_layer.register_forward_hook(self._save_activation)
-        # backward hook: fires when .backward() sends gradients through target_layer
-        target_layer.register_full_backward_hook(self._save_gradient)
+        # forward/backward hooks fire every time target_layer processes a forward or
+        # backward pass; handles are kept so remove_hooks() can unregister them later -
+        # without that, re-creating a GradCAM on the same layer (e.g. a notebook cell
+        # re-run) stacks another pair of hooks on top of the old ones forever
+        self._handles = [
+            target_layer.register_forward_hook(self._save_activation),
+            target_layer.register_full_backward_hook(self._save_gradient),
+        ]
 
     def _save_activation(self, module, input, output):
         self.activations = output.detach()
 
     def _save_gradient(self, module, grad_input, grad_output):
         self.gradients = grad_output[0].detach()
+
+    def remove_hooks(self):
+        """Unregisters this instance's hooks from the model. Call on a previous
+        GradCAM before creating a new one on the same layer (e.g. right before
+        re-running the cell that builds grad_cam), so hooks don't silently
+        accumulate across repeated runs."""
+        for handle in self._handles:
+            handle.remove()
+        self._handles = []
 
     def __call__(self, x, class_idx):
         self.model.zero_grad()
