@@ -20,12 +20,6 @@ dependencies = [
     "python-multipart>=0.0.32",
     "uvicorn[standard]>=0.52.4",
     "scikit-learn>=1.9.0",
-    "jupyterlab-widgets>=3.0.17",
-    "ipywidgets>=8.1.9",
-    "plotly>=7.0.0",
-    "umap-learn>=0.5.12",
-    "nbformat>=5.11.1",
-    "anywidget>=0.11.0",
     "tqdm>=4.70.0",
     "joblib>=1.6.0",
     "transformers>=5.16.1",
@@ -42,7 +36,13 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "anywidget>=0.11.0",
     "ipdb>=0.13.13",
     "ipykernel>=7.3.0",
     "ipython>=9.17.1",
+    "ipywidgets>=8.1.9",
+    "jupyterlab-widgets>=3.0.17",
+    "nbformat>=5.11.1",
+    "plotly>=7.0.0",
+    "umap-learn>=0.5.12",
 ]

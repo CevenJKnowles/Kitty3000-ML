@@ -669,19 +669,14 @@ name = "kitty3000-ml"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "anywidget" },
     { name = "fastapi" },
-    { name = "ipywidgets" },
-    { name = "jupyterlab-widgets" },
+    { name = "joblib" },
     { name = "librosa" },
     { name = "matplotlib" },
-    { name = "nbformat" },
-    { name = "joblib" },
     { name = "ml-dtypes" },
     { name = "optree" },
     { name = "pandas" },
     { name = "panns-inference" },
-    { name = "plotly" },
     { name = "python-multipart" },
     { name = "scikit-learn" },
     { name = "torch" },
@@ -689,32 +684,32 @@ dependencies = [
     { name = "torchcodec" },
     { name = "tqdm" },
     { name = "transformers" },
-    { name = "umap-learn" },
     { name = "uvicorn", extra = ["standard"] },
 ]
 
 [package.dev-dependencies]
 dev = [
+    { name = "anywidget" },
     { name = "ipdb" },
     { name = "ipykernel" },
     { name = "ipython" },
+    { name = "ipywidgets" },
+    { name = "jupyterlab-widgets" },
+    { name = "nbformat" },
+    { name = "plotly" },
+    { name = "umap-learn" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "anywidget", specifier = ">=0.11.0" },
     { name = "fastapi", specifier = ">=0.141.1" },
-    { name = "ipywidgets", specifier = ">=8.1.9" },
-    { name = "jupyterlab-widgets", specifier = ">=3.0.17" },
+    { name = "joblib", specifier = ">=1.6.0" },
     { name = "librosa", specifier = ">=1.0.0" },
     { name = "matplotlib", specifier = ">=3.11.1" },
-    { name = "nbformat", specifier = ">=5.11.1" },
-    { name = "joblib", specifier = ">=1.6.0" },
     { name = "ml-dtypes", specifier = ">=0.4.0" },
     { name = "optree", specifier = ">=0.20.0" },
     { name = "pandas", specifier = ">=3.0.5" },
     { name = "panns-inference", specifier = ">=0.1.1" },
-    { name = "plotly", specifier = ">=7.0.0" },
     { name = "python-multipart", specifier = ">=0.0.32" },
     { name = "scikit-learn", specifier = ">=1.9.0" },
     { name = "torch", specifier = ">=2.14.0" },
@@ -722,15 +717,20 @@ requires-dist = [
     { name = "torchcodec", specifier = ">=0.16.0" },
     { name = "tqdm", specifier = ">=4.70.0" },
     { name = "transformers", specifier = ">=5.16.1" },
-    { name = "umap-learn", specifier = ">=0.5.12" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.52.4" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "anywidget", specifier = ">=0.11.0" },
     { name = "ipdb", specifier = ">=0.13.13" },
     { name = "ipykernel", specifier = ">=7.3.0" },
     { name = "ipython", specifier = ">=9.17.1" },
+    { name = "ipywidgets", specifier = ">=8.1.9" },
+    { name = "jupyterlab-widgets", specifier = ">=3.0.17" },
+    { name = "nbformat", specifier = ">=5.11.1" },
+    { name = "plotly", specifier = ">=7.0.0" },
+    { name = "umap-learn", specifier = ">=0.5.12" },
 ]
 
 [[package]]
