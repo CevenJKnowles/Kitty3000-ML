@@ -18,13 +18,16 @@ RUN uv export --frozen --no-dev --no-hashes --no-emit-project -o requirements.tx
 RUN mkdir -p /root/panns_data \
     && .venv/bin/python -c "import urllib.request; urllib.request.urlretrieve('https://zenodo.org/record/3987831/files/Cnn14_mAP%3D0.431.pth?download=1', '/root/panns_data/Cnn14_mAP=0.431.pth')"
 
+RUN .venv/bin/python -c "import urllib.request; urllib.request.urlretrieve('http://storage.googleapis.com/us_audioset/youtube_corpus/v1/csv/class_labels_indices.csv', '/root/panns_data/class_labels_indices.csv')" \
+    && .venv/bin/python -c "import panns_inference"
+
 RUN .venv/bin/python -c "from transformers import ASTFeatureExtractor, ASTModel; ASTFeatureExtractor.from_pretrained('MIT/ast-finetuned-audioset-10-10-0.4593'); ASTModel.from_pretrained('MIT/ast-finetuned-audioset-10-10-0.4593')"
 
 ENV HF_HUB_OFFLINE=1 \
     TRANSFORMERS_OFFLINE=1
 
 COPY src src
-RUN uv pip install --no-deps .
+RUN uv pip install --no-deps -e .
 
 COPY models models
 
