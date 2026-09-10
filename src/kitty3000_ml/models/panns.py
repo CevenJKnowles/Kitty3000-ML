@@ -7,18 +7,17 @@ from panns_inference import AudioTagging
 from kitty3000_ml.preprocess import load_clip
 
 #Set path directory
-MODEL_DIR = Path(__file__).resolve().parents[2] / "models"
+MODEL_DIR = Path(__file__).resolve().parents[3] / "models"
 
-#determine model chosen e.g. cnn + 11s classifier
+#specify classifier model to load
 MODEL_PATH = MODEL_DIR / "panns_cnn14_32000hz_11s_classifier.joblib"
+
+bundle = joblib.load(MODEL_PATH)
 
 def available():
     return os.path.exists(MODEL_PATH)
 
-# Load the classifier from models (created by bas-PANN jupyter notebook)
-bundle = joblib.load(
-    MODEL_DIR / "panns_cnn14_32000hz_7s_classifier.joblib"
-)
+#extract classifier from loaded model
 classifier = bundle["classifier"]
 CLASS_NAMES = classifier.classes_.tolist()
 
@@ -48,7 +47,4 @@ def run(audio_bytes):
     #predict probability distribution of classes
     scores = classifier.predict_proba(embedding)[0]
 
-    return {
-        "scores": scores.tolist(),
-        "cat_score": None,
-    }
+    return {"scores": scores.tolist()}
