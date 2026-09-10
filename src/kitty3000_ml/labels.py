@@ -11,5 +11,4 @@ LABELS = [
     "Paining",
     "Resting",
     "Warning",
-    "Unknown",
 ]
