@@ -43,24 +43,3 @@ def predict(wav_bytes, model_name):
         best_label = "Unknown"
 
     return {"label": best_label, "probs": probs, "cat_score": cat_score, "is_cat": is_cat, "model": model_name}
-
-
-def predict_updated(wav_bytes, model_name):
-    model = MODELS[model_name]
-    result = model.run(wav_bytes)
-    scores = result["scores"]
-
-    # Use this model's class order.
-    labels = model.CLASS_NAMES
-
-    probs = {}
-    for i in range(len(scores)):
-        probs[labels[i]] = scores[i]
-
-    # Select the class with the highest probability.
-    best_label = max(probs, key=probs.get)
-
-    return {
-        "label": best_label,
-        "probs": probs,
-        "model": model_name,}
