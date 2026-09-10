@@ -1,5 +1,5 @@
 from kitty3000_ml.labels import LABELS
-from kitty3000_ml.models import dummy, panns, ast, cnn, CLASS_NAMES, run
+from kitty3000_ml.models import dummy, panns, ast, cnn
 
 MODELS = {"dummy": dummy, "panns": panns, "ast": ast, "cnn": cnn}
 CAT_THRESHOLD = 0.2
