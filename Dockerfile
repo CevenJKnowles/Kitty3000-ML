@@ -15,6 +15,8 @@ RUN mkdir -p /root/panns_data \
 RUN uv venv /tmp/hf \
     && uv pip install --python /tmp/hf/bin/python huggingface_hub==1.30.0 \
     && /tmp/hf/bin/python -c "from huggingface_hub import snapshot_download; snapshot_download('MIT/ast-finetuned-audioset-10-10-0.4593', revision='f826b80d28226b62986cc218e5cec390b1096902', allow_patterns=['*.json', '*.safetensors'])" \
+    && mkdir -p /app/hf_cache/hub/models--MIT--ast-finetuned-audioset-10-10-0.4593/refs \
+    && echo -n f826b80d28226b62986cc218e5cec390b1096902 > /app/hf_cache/hub/models--MIT--ast-finetuned-audioset-10-10-0.4593/refs/main \
     && rm -rf /tmp/hf
 
 COPY pyproject.toml uv.lock README.md ./
