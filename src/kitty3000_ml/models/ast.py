@@ -4,7 +4,7 @@ import joblib
 import torch
 import librosa
 from transformers import ASTFeatureExtractor, ASTModel
-from kitty3000_ml.models.preprocess import load_clip
+from kitty3000_ml.preprocess import load_clip
 
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "..", "models", "ast_logreg.joblib")
 
