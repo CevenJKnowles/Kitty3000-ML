@@ -16,7 +16,10 @@ gcloud services enable run.googleapis.com artifactregistry.googleapis.com
 gcloud artifacts repositories create $REPO --repository-format=docker --location=$REGION 2>/dev/null || true
 gcloud auth configure-docker $REGION-docker.pkg.dev --quiet
 
-docker build --platform linux/amd64 -t $IMAGE:latest .
+docker build --platform linux/amd64 \
+  --cache-from $IMAGE:latest \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
+  -t $IMAGE:latest .
 docker push $IMAGE:latest
 
 gcloud run deploy $SERVICE \
