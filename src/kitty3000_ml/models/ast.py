@@ -4,7 +4,7 @@ import joblib
 import torch
 import librosa
 from transformers import ASTFeatureExtractor, ASTModel
-from kitty3000_ml.models.preprocess import load_clip
+from kitty3000_ml.preprocess import load_clip
 
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "..", "models", "ast_logreg.joblib")
 
@@ -50,10 +50,8 @@ def run(audio_bytes):
     embedding = _extract_embedding(waveform, _bundle["sr"])
     probs = _bundle["model"].predict_proba(embedding[None, :])[0]
 
-    scores = sorted(
-        [{"label": c, "score": float(p)} for c, p in zip(_bundle["classes"], probs)],
-        key=lambda x: x["score"],
-        reverse=True,
-    )
+    scores = []
+    for p in probs:
+        scores.append(float(p))
 
-    return {"scores": scores, "cat_score": scores[0]}
+    return {"scores": scores, "cat_score": None}
