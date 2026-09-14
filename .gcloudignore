@@ -1,0 +1,17 @@
+# MK: only used by "gcloud run deploy --source ." (we normally deploy a pushed image, see deploy.sh).
+# MK: Without this file gcloud falls back to .gitignore and silently drops models/ and *.joblib.
+.venv
+.git
+.github
+data
+raw_data
+notebooks
+hf_cache
+*.ipynb
+*.mp3
+*.wav
+*.zip
+**/__pycache__
+.DS_Store
+.env
+.env.*

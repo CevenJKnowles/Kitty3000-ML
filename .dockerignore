@@ -1,0 +1,16 @@
+# MK: what docker build does NOT send. Keep models/, uv.lock and README.md - the Dockerfile needs them.
+.venv
+.git
+.github
+data
+raw_data
+notebooks
+hf_cache
+*.ipynb
+*.mp3
+*.wav
+*.zip
+**/__pycache__
+.DS_Stores
+.env
+.env.*
