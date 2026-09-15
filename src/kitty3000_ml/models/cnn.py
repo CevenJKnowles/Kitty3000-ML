@@ -8,7 +8,7 @@ import torch.nn as nn
 
 from kitty3000_ml.labels import LABELS
 from kitty3000_ml.preprocess import SR, logmel
-from kitty3000_ml.models.cat_gate import cat_gate_score
+from kitty3000_ml.cat_gate import cat_gate_score
 
 MODEL_DIR = Path(__file__).resolve().parents[3] / "models"
 MODEL_PATH = MODEL_DIR / "cnn_baseline" / "cnn_baseline_best.pt"
