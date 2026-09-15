@@ -5,6 +5,7 @@ import torch
 import librosa
 from transformers import ASTFeatureExtractor, ASTModel
 from kitty3000_ml.preprocess import load_clip
+from kitty3000_ml.cat_gate import cat_gate_score
 
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "..", "models", "ast_logreg.joblib")
 
@@ -46,6 +47,7 @@ def run(audio_bytes):
         tmp.write(audio_bytes)
         tmp.flush()
         waveform = load_clip(tmp.name, sr=_bundle["sr"], seconds=_bundle["seconds"])
+        gate_score = cat_gate_score(tmp.name)  # same temp file, gate loads its own 32kHz copy internally
 
     embedding = _extract_embedding(waveform, _bundle["sr"])
     probs = _bundle["model"].predict_proba(embedding[None, :])[0]
@@ -54,4 +56,4 @@ def run(audio_bytes):
     for p in probs:
         scores.append(float(p))
 
-    return {"scores": scores, "cat_score": None}
+    return {"scores": scores, "cat_score": gate_score}  # is_cat is computed centrally in predict.py
