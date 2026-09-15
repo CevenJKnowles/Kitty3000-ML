@@ -1,9 +1,19 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 from kitty3000_ml.predict import predict, available_models, default_model
 from kitty3000_ml.labels import LABELS
 
 app = FastAPI()
+
+# MK: let the web front end (a browser page on another domain) call this API.
+# MK: public, read-only inference API, so any origin is fine for the demo.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
