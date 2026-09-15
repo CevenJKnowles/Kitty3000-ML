@@ -8,6 +8,7 @@ import torch.nn as nn
 
 from kitty3000_ml.labels import LABELS
 from kitty3000_ml.preprocess import SR, logmel
+from kitty3000_ml.models.cat_gate import cat_gate_score
 
 MODEL_DIR = Path(__file__).resolve().parents[3] / "models"
 MODEL_PATH = MODEL_DIR / "cnn_baseline" / "cnn_baseline_best.pt"
@@ -67,6 +68,7 @@ def run(audio_bytes):
         path = Path(folder) / "upload.mp3"
         path.write_bytes(audio_bytes)
         y = _load_clip_natural(path)
+        gate_score = cat_gate_score(path)  # same temp file, gate loads its own 32kHz copy internally
 
     mel = logmel(y)
     mel = _normalize_mel(mel)
@@ -76,7 +78,4 @@ def run(audio_bytes):
         logits = model(x)
         probs = torch.softmax(logits, dim=1)[0]
 
-    return {
-        "scores": probs.tolist(),
-        "cat_score": None,
-    }
+    return {"scores": probs.tolist(), "cat_score": gate_score}  # is_cat is computed centrally in predict.py
