@@ -5,7 +5,7 @@ from panns_inference import AudioTagging, labels as AUDIOSET_LABELS
 
 PANN_SR = 32000  # PANN's native/expected sample rate - do not feed it 16kHz audio
 
-CAT_LABEL_KEYWORDS = ["cat", "meow", "purr", "hiss", "caterwaul", "growling"]
+CAT_LABEL_KEYWORDS = ["cat", "meow", "purr", "hiss", "caterwaul"]
 
 _device = "cuda" if torch.cuda.is_available() else "cpu"
 _pann_gate = None
