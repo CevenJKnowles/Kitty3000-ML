@@ -2,7 +2,7 @@ from kitty3000_ml.labels import LABELS
 from kitty3000_ml.models import dummy, panns, ast, cnn
 
 MODELS = {"dummy": dummy, "panns": panns, "ast": ast, "cnn": cnn}
-CAT_THRESHOLD = 0.2
+CAT_THRESHOLD = 0.02 # Minimum cat score to consider the audio as containing a cat, 0.02 wll work to filter out dog sounds for example
 
 
 def available_models():
